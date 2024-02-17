@@ -1,0 +1,3 @@
+gcc -shared -o connector.so connector.c -I/usr/include/mysql -lmysqlclient -fPIC -std=c99
+cp connector.so libconnector.so
+go build -o myqll main.go
