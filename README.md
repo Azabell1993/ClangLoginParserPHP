@@ -13,20 +13,19 @@ MySQL Server installed and running.
 GCC compiler for compiling C code.
 MySQL development libraries for linking the MySQL client.
 
-Setup
--------------
+## Setup
 Clone the repository to your local machine
 
-bash
+## bash
 -------------
-git clone https://github.com/Azabell1993/loginParserC.git  
-cd ClangLoginParser  
+$ sudo git clone https://github.com/Azabell1993/loginParserC.git  
+$ cd ClangLoginParser  
 
-Usage
+## Usage
 -------------
 Update the connect.json file with your MySQL database connection details:
 
-json
+## json
 -------------
 ```  
 {
@@ -37,8 +36,7 @@ json
 }
 ```  
 
-Makefile  
-------------
+## Makefile  
 ```  
 CC = gcc
 CFLAGS = -I/usr/include/mysql -g -fPIC -std=c99
@@ -77,7 +75,6 @@ Follow the prompts to enter a username and password for authentication.
   
   
 ## Structure
--------------
 - connector.h: Header file containing JSON parsing and database connection functions.
 - login.c: Main program file containing the login and MySQL interaction logic.
 - connect.json: JSON configuration file for MySQL connection details.
@@ -85,13 +82,11 @@ Follow the prompts to enter a username and password for authentication.
 - PHP Script: PHP script for web-based user authentication.
    
 ## Notes
--------------
 The program establishes a connection to the MySQL database using the details provided in connect.json.  
 It performs user authentication and executes sample queries using MySQL.  
 The connector.h header provides JSON parsing utilities to read the connect.json file.  
 
 ## MAC
--------------
 ```
 #include <mysql/mysql.h>
 #include <stdio.h>
@@ -100,15 +95,12 @@ The connector.h header provides JSON parsing utilities to read the connect.json 
 ```  
 
 ## Contributing
--------------
 Contributions are welcome! If you find any issues or want to enhance the example, feel free to create a pull request.  
 
 ## License
--------------
 This project is licensed under the MIT License - see the LICENSE file for details.  
 
 ## Build Example
--------------
 ```
 azabell@azabell-kernelhost:/var/www/cloud/loginParserC$ sudo make
 gcc -I/usr/include/mysql -g -fPIC -std=c99 -o loginSecurityLib login.c -L/usr/lib/mysql -lmysqlclient
@@ -175,7 +167,6 @@ Feel free to customize this README to include any additional information or inst
 
 
 ## PHP Integration for Web Authentication
--------------
 To integrate this C program with a web interface for user authentication, use the following PHP script:  
   
 ```
@@ -234,7 +225,6 @@ connect.json  connector.h  createDb.txt  golangbuild.txt  login.c  Makefile  REA
 ```  
 
 ## Notes
--------------
 The program establishes a connection to the MySQL database using the details provided in connect.json. It performs user authentication and executes sample queries using MySQL. The connector.h header provides JSON parsing utilities to read the connect.json file.
 
 Contributing
@@ -247,4 +237,14 @@ Build Example
 [Include build and execution examples as previously provided]
 
 Replace your_db_user, your_db_password, and your_db_name with your actual MySQL database details before running the program. Customize the README to include any additional information or instructions specific to your project.
+
+
+## Pictures  
+https://github.com/Azabell1993/ClangLoginParserPHP/blob/main/kernel.png  
+  
+https://github.com/Azabell1993/ClangLoginParserPHP/blob/main/login.png  
+  
+https://github.com/Azabell1993/ClangLoginParserPHP/blob/main/success.png  
+  
+https://github.com/Azabell1993/ClangLoginParserPHP/blob/main/failed.png  
 
