@@ -240,11 +240,11 @@ Replace your_db_user, your_db_password, and your_db_name with your actual MySQL 
 
 
 ## Pictures  
-https://github.com/Azabell1993/ClangLoginParserPHP/blob/main/kernel.png  
+![Kernel Build](https://github.com/Azabell1993/ClangLoginParserPHP/blob/main/kernel_build.png)  
   
-https://github.com/Azabell1993/ClangLoginParserPHP/blob/main/login.png  
+![Web Login](https://github.com/Azabell1993/ClangLoginParserPHP/blob/main/web_login.png)  
   
-https://github.com/Azabell1993/ClangLoginParserPHP/blob/main/success.png  
+![Success](https://github.com/Azabell1993/ClangLoginParserPHP/blob/main/success.png)  
   
-https://github.com/Azabell1993/ClangLoginParserPHP/blob/main/failed.png  
-
+![Failed](https://github.com/Azabell1993/ClangLoginParserPHP/blob/main/failed.png)  
+  
