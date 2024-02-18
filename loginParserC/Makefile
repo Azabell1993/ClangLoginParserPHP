@@ -7,17 +7,19 @@ EXECUTABLE = loginSecurityLib
 CONNECTOR_SRC = connector.h
 CONNECTOR_LIB = connector.so
 LIBCONNECTOR = libconnector.so
+LCRYPTO = -lcrypto
+
 
 # 기본 타겟
 all: $(EXECUTABLE) connector
 
 # 기존 C 프로그램 빌드
 $(EXECUTABLE): $(SOURCES)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) $(LCRYPTO)
 
 # connector.so 생성
 connector: $(CONNECTOR_SRC)
-	$(CC) -shared -o $(CONNECTOR_LIB) $(CONNECTOR_SRC) $(CFLAGS) $(LDFLAGS)
+	$(CC) -shared -o $(CONNECTOR_LIB) $(CONNECTOR_SRC) $(CFLAGS) $(LDFLAGS) 
 	cp $(CONNECTOR_LIB) $(LIBCONNECTOR)
 
 # 정리

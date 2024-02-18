@@ -101,14 +101,50 @@ Contributions are welcome! If you find any issues or want to enhance the example
 This project is licensed under the MIT License - see the LICENSE file for details.  
 
 ## Build Example
+
+WARNING :
+-----------------------
 ```
-azabell@azabell-kernelhost:/var/www/cloud/loginParserC$ sudo make
-gcc -I/usr/include/mysql -g -fPIC -std=c99 -o loginSecurityLib login.c -L/usr/lib/mysql -lmysqlclient
-gcc -shared -o connector.so connector.h -I/usr/include/mysql -g -fPIC -std=c99 -L/usr/lib/mysql -lmysqlclient
+// Uncomment the line below if you want to test in the console
+// If you wish to test the functionality in the console environment,
+// please comment out the following line before running 'make':
+// sha256(password, hashedPassword); // Hash the user's password using SHA-256
+```  
+  
+  
+```
+----------------------------------------------------------------------------------------------------------------------------------
+-- The warnings about 'SHA256_Init', 'SHA256_Update', and 'SHA256_Final' being deprecated since OpenSSL 3.0 can be safely ignored.
+----------------------------------------------------------------------------------------------------------------------------------
+azabell@azabell-kernelhost:/var/www/cloud/loginParserC$ make
+gcc -I/usr/include/mysql -g -fPIC -std=c99 -o loginSecurityLib login.c -L/usr/lib/mysql -lmysqlclient -lcrypto
+login.c: In function ‘sha256’:
+login.c:85:5: warning: ‘SHA256_Init’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+   85 |     SHA256_Init(&sha256);
+      |     ^~~~~~~~~~~
+In file included from login.c:5:
+/usr/include/openssl/sha.h:73:27: note: declared here
+   73 | OSSL_DEPRECATEDIN_3_0 int SHA256_Init(SHA256_CTX *c);
+      |                           ^~~~~~~~~~~
+login.c:86:5: warning: ‘SHA256_Update’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+   86 |     SHA256_Update(&sha256, string, strlen(string));
+      |     ^~~~~~~~~~~~~
+In file included from login.c:5:
+/usr/include/openssl/sha.h:74:27: note: declared here
+   74 | OSSL_DEPRECATEDIN_3_0 int SHA256_Update(SHA256_CTX *c,
+      |                           ^~~~~~~~~~~~~
+login.c:87:5: warning: ‘SHA256_Final’ is deprecated: Since OpenSSL 3.0 [-Wdeprecated-declarations]
+   87 |     SHA256_Final(hash, &sha256);
+      |     ^~~~~~~~~~~~
+In file included from login.c:5:
+/usr/include/openssl/sha.h:76:27: note: declared here
+   76 | OSSL_DEPRECATEDIN_3_0 int SHA256_Final(unsigned char *md, SHA256_CTX *c);
+      |                           ^~~~~~~~~~~~
+gcc -shared -o connector.so connector.h -I/usr/include/mysql -g -fPIC -std=c99 -L/usr/lib/mysql -lmysqlclient 
 cp connector.so libconnector.so
-azabell@azabell-kernelhost:/var/www/cloud/loginParserC$ ./loginSecurityLib 
-사용법: ./loginSecurityLib <username> <password>
-azabell@azabell-kernelhost:/var/www/cloud/loginParserC$ ./loginSecurityLib admin admin1234
+
+
+azabell@azabell-kernelhost:/var/www/cloud/loginParserC$ ./loginSecurityLib admin 'admin20081!@#'
 =======================================
 db_host localhost
 db_user admin
@@ -118,12 +154,14 @@ db_name admin
 Connect Sucess!!
  !! RUN QUERY !!
 =====================================================================================
-	 SELECT DISTINCT                            IFNULL(                             CAST(                                   (                                       SELECT CASE                                         WHEN COUNT(*) > 0 THEN 1                                            ELSE 0                                      END                                     FROM (                                          SELECT A1.USER_INFONUM                                          FROM ADMIN AS A1                                            INNER JOIN ADMIN_SECURITY AS S ON ADMIN.USERNAME = S.USERNAME                                           WHERE ADMIN.USER_INFONUM = S.USER_SECURITY_INFO                                          AND   ADMIN.USERNAME = S.USERNAME                                        ) A                                 ) AS CHAR                               ), 0                            ) AS LOGIN                      FROM ADMIN                  WHERE                     USERNAME = 'admin'                     AND PASSWORD = 'admin1234'; 
+	 SELECT DISTINCT                            IFNULL(                             CAST(                                   (                                       SELECT CASE                                         WHEN COUNT(*) > 0 THEN 1                                            ELSE 0                                      END                                     FROM (                                          SELECT A1.USER_INFONUM                                          FROM ADMIN AS A1                                            INNER JOIN ADMIN_SECURITY AS S ON ADMIN.USERNAME = S.USERNAME                                           WHERE ADMIN.USER_INFONUM = S.USER_SECURITY_INFO                                          AND   ADMIN.USERNAME = S.USERNAME                                        ) A                                 ) AS CHAR                               ), 0                            ) AS LOGIN                      FROM ADMIN                  WHERE                     USERNAME = 'admin'                     AND PASSWORD = '${hash password value}'; 
 =====================================================================================
  	 query_stat_chk : 0 
  !! RUN QUERY !!
+Username: admin
+Hashed Password: '${hash password value}'; 
 =====================================================================================
-	 SELECT DISTINCT ad.USERNAME                            FROM ADMIN ad                                                   WHERE USERNAME 		= 'admin'                           AND PASSWORD 	= 'admin1234'; 
+	 SELECT DISTINCT ad.USERNAME                            FROM ADMIN ad                                                   WHERE USERNAME 		= 'admin'                           AND PASSWORD 	= '${hash password value}'; 
 =====================================================================================
  	 query_stat : 0
   !! RUN QUERY !!
@@ -131,34 +169,12 @@ Connect Sucess!!
 	 select now() 
 =====================================================================================
  	 query_stat_date : 0
-==============================로그인 성공!!!===================================
-회원 admin님 환영합니다. 
+==============================Login Successful!!!===================================
+Member admin, welcome. 
 ##############################################
-로그인 시각 :   2024-02-18 02:09:35
-azabell@azabell-kernelhost:/var/www/cloud/loginParserC$ ./loginSecurityLib admin admin1234234
-=======================================
-db_host localhost
-db_user admin
-db_pass admin
-db_name admin
+Login time:  2024-02-18 14:31:09
+SELECT DISTINCT                            IFNULL(                             CAST(                                   (                                       SELECT CASE                                         WHEN COUNT(*) > 0 THEN 1                                            ELSE 0                                      END                                     FROM (                                          SELECT A1.USER_INFONUM                                          FROM ADMIN AS A1                                            INNER JOIN ADMIN_SECURITY AS S ON ADMIN.USERNAME = S.USERNAME                                           WHERE ADMIN.USER_INFONUM = S.USER_SECURITY_INFO                                          AND   ADMIN.USERNAME = S.USERNAME                                        ) A                                 ) AS CHAR                               ), 0                            ) AS LOGIN                      FROM ADMIN                  WHERE                     USERNAME = 'admin'                     AND PASSWORD = '${hash password value}'; 
 
-Connect Sucess!!
- !! RUN QUERY !!
-=====================================================================================
-	 SELECT DISTINCT                            IFNULL(                             CAST(                                   (                                       SELECT CASE                                         WHEN COUNT(*) > 0 THEN 1                                            ELSE 0                                      END                                     FROM (                                          SELECT A1.USER_INFONUM                                          FROM ADMIN AS A1                                            INNER JOIN ADMIN_SECURITY AS S ON ADMIN.USERNAME = S.USERNAME                                           WHERE ADMIN.USER_INFONUM = S.USER_SECURITY_INFO                                          AND   ADMIN.USERNAME = S.USERNAME                                        ) A                                 ) AS CHAR                               ), 0                            ) AS LOGIN                      FROM ADMIN                  WHERE                     USERNAME = 'admin'                     AND PASSWORD = 'admin1234234'; 
-=====================================================================================
- 	 query_stat_chk : 0 
- !! RUN QUERY !!
-=====================================================================================
-	 SELECT DISTINCT ad.USERNAME                            FROM ADMIN ad                                                   WHERE USERNAME 		= 'admin'                           AND PASSWORD 	= 'admin1234234'; 
-=====================================================================================
- 	 query_stat : 0
-  !! RUN QUERY !!
-=====================================================================================
-	 select now() 
-=====================================================================================
- 	 query_stat_date : 0
-로그인 실패!!
 ```  
 
 Replace your-username and your-repo-name with your GitHub username and repository name respectively. Make sure to update the MySQL connection details in connect.json before running the program.
@@ -224,6 +240,13 @@ azabell@azabell-kernelhost:/var/www/cloud/loginParserC$ ls
 connect.json  connector.h  createDb.txt  golangbuild.txt  login.c  Makefile  README.md
 ```  
 
+## Console Test  
+    // Uncomment the line below if you want to test in the console
+    // console에서 테스트를 해보고 싶다면 아래 줄의 주석을 해제한다.
+```
+    // sha256(password, hashedPassword);
+```  
+  
 ## Notes
 The program establishes a connection to the MySQL database using the details provided in connect.json. It performs user authentication and executes sample queries using MySQL. The connector.h header provides JSON parsing utilities to read the connect.json file.
 
@@ -246,5 +269,5 @@ Replace your_db_user, your_db_password, and your_db_name with your actual MySQL 
   
 ![Success](https://github.com/Azabell1993/ClangLoginParserPHP/blob/main/success.png)  
   
-![Failed](https://github.com/Azabell1993/ClangLoginParserPHP/blob/main/failed.png)  
+![Failed](https://github.com/Azabell1993/ClangLoginParserPHP/blob/main/login failed.png)  
   

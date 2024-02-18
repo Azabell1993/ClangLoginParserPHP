@@ -46,7 +46,7 @@ mysql> CREATE TABLE ADMIN (
     -> USER_INFONUM VARCHAR(20) NOT NULL,
     -> NAME VARCHAR(20) NOT NULL,
     -> USERNAME VARCHAR(20)  NOT NULL,
-    -> PASSWORD VARCHAR(20)  NOT NULL,
+    -> PASSWORD VARCHAR(100)  NOT NULL,
     -> CREATE_DATE DATE  NOT NULL
     -> ) DEFAULT CHARSET=UTF8MB4;
 Query OK, 0 rows affected (0.08 sec)
@@ -67,6 +67,17 @@ mysql> select * from ADMIN;
 
 mysql> commit;
 Query OK, 0 rows affected (0.01 sec)
+
+// *******************************************************************************************************************************************************
+// **  To change a user's password stored in the database, it must be updated directly with the hashed value of the password. 
+// ** The above UPDATE statement exemplifies changing the PASSWORD field for the user with USERNAME 'admin' in the ADMIN table to a new hashed password value. 
+// ** This method ensures that passwords stored in the database are securely protected, 
+// ** allowing password verification without exposing the original passwords by using a hash function.
+// *******************************************************************************************************************************************************
+
+mysql > UPDATE ADMIN 
+        SET PASSWORD = '${hash password value}';  <-- Directly insert.
+        WHERE USERNAME = 'admin';
 
 mysql> quit;
 Bye
