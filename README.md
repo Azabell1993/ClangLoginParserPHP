@@ -18,8 +18,8 @@ Clone the repository to your local machine
 
 ## bash
 -------------
-$ sudo git clone https://github.com/Azabell1993/ClangLoginParserPHP.git
-$ cd ClangLoginParserPHP  
+$ sudo git clone https://github.com/Azabell1993/ClangLoginParserPHP.git  
+$ cd ClangLoginParserPHP    
 
 ## Usage
 -------------
