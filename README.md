@@ -44,6 +44,71 @@ Update the connect.json file with your MySQL database connection details:
 }
 ```  
 
+## MySQL
+```
+ubuntu@mtdata:/var/www/cloud/ClangLoginParserPHP$ sudo mysql -u root
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 152
+Server version: 8.0.36-0ubuntu0.22.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql>
+mysql> CREATE DATABASE test;
+CREATE USER test@'localhost' IDENTIFIED BY 'test1234';
+FLUSH PRIVILEGES;
+SHOW GRANTS FOR test@'localhost';
+GRANT ALL PRIVILEGES ON test.* to test@'localhost';
+SELECT User, Host, authentication_string FROM mysql.user;
+FLUSH PRIVILEGES;Query OK, 1 row affected (0.01 sec)
+
+mysql> CREATE USER test@'localhost' IDENTIFIED BY 'test1234';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> FLUSH PRIVILEGES;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SHOW GRANTS FOR test@'localhost';
++------------------------------------------+
+| Grants for test@localhost                |
++------------------------------------------+
+| GRANT USAGE ON *.* TO `test`@`localhost` |
++------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> GRANT ALL PRIVILEGES ON test.* to test@'localhost';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SELECT User, Host, authentication_string FROM mysql.user;
++------------------+-----------+------------------------------------------------------------------------+
+| User             | Host      | authentication_string                                                  |
++------------------+-----------+------------------------------------------------------------------------+
+| mysql.sys        | localhost | $A$005$THISISACOMBINATIONOFINVALIDSALTANDPASSWORDTHATMUSTNEVERBRBEUSED |
+| root             | localhost |                                                                        |
+| test             | localhost | $A$005$8[j+5t*=
+                                                IaG:CLxUS1HkWUzzLcQ6CzkTj.i3B6ukSNuUNHrpgmj/PaK4 |
++------------------+-----------+------------------------------------------------------------------------+
+10 rows in set (0.00 sec)
+
+mysql> FLUSH PRIVILEGES;
+Query OK, 0 rows affected (0.01 sec)
+```  
+--------------------------------------------------------
+
+## SQL data Backup  
+```
+ubuntu@mtdata:/var/www/cloud/ClangLoginParserPHP$ sudo chmod 777 data.sql
+ubuntu@mtdata:/var/www/cloud/ClangLoginParserPHP$ sudo mysql -u test -p test > data.sql
+Enter password:
+```  
+    
+
 ## Makefile  
 ```  
 CC = gcc
@@ -150,26 +215,26 @@ In file included from login.c:5:
       |                           ^~~~~~~~~~~~
 gcc -shared -o connector.so connector.h -I/usr/include/mysql -g -fPIC -std=c99 -L/usr/lib/mysql -lmysqlclient 
 cp connector.so libconnector.so
-
-
-azabell@azabell-kernelhost:/var/www/cloud/loginParserC$ ./loginSecurityLib admin 'admin20081!@#'
+  
+  
+$ ./loginSecurityLib test 'test1234'
 =======================================
 db_host localhost
-db_user admin
-db_pass admin
-db_name admin
+db_user test
+db_pass test1234
+db_name test
 
 Connect Sucess!!
  !! RUN QUERY !!
 =====================================================================================
-	 SELECT DISTINCT                            IFNULL(                             CAST(                                   (                                       SELECT CASE                                         WHEN COUNT(*) > 0 THEN 1                                            ELSE 0                                      END                                     FROM (                                          SELECT A1.USER_INFONUM                                          FROM ADMIN AS A1                                            INNER JOIN ADMIN_SECURITY AS S ON ADMIN.USERNAME = S.USERNAME                                           WHERE ADMIN.USER_INFONUM = S.USER_SECURITY_INFO                                          AND   ADMIN.USERNAME = S.USERNAME                                        ) A                                 ) AS CHAR                               ), 0                            ) AS LOGIN                      FROM ADMIN                  WHERE                     USERNAME = 'admin'                     AND PASSWORD = '${hash password value}'; 
+	 SELECT DISTINCT                            IFNULL(                             CAST(                                   (                                       SELECT CASE                                         WHEN COUNT(*) > 0 THEN 1                                            ELSE 0                                      END                                     FROM (                                          SELECT A1.USER_INFONUM                                          FROM ADMIN AS A1                                            INNER JOIN ADMIN_SECURITY AS S ON ADMIN.USERNAME = S.USERNAME                                           WHERE ADMIN.USER_INFONUM = S.USER_SECURITY_INFO                                          AND   ADMIN.USERNAME = S.USERNAME                                        ) A                                 ) AS CHAR                               ), 0                            ) AS LOGIN                      FROM ADMIN                  WHERE                     USERNAME = 'test'                     AND PASSWORD = '937e8d5fbb48bd4949536cd65b8d35c426b80d2f830c5c308e2cdec422ae2244'; 
 =====================================================================================
  	 query_stat_chk : 0 
  !! RUN QUERY !!
-Username: admin
-Hashed Password: '${hash password value}'; 
+Username: test
+Hashed Password: 937e8d5fbb48bd4949536cd65b8d35c426b80d2f830c5c308e2cdec422ae2244
 =====================================================================================
-	 SELECT DISTINCT ad.USERNAME                            FROM ADMIN ad                                                   WHERE USERNAME 		= 'admin'                           AND PASSWORD 	= '${hash password value}'; 
+	 SELECT DISTINCT ad.USERNAME                            FROM ADMIN ad                                                   WHERE USERNAME 		= 'test'                           AND PASSWORD 	= '937e8d5fbb48bd4949536cd65b8d35c426b80d2f830c5c308e2cdec422ae2244'; 
 =====================================================================================
  	 query_stat : 0
   !! RUN QUERY !!
@@ -178,12 +243,13 @@ Hashed Password: '${hash password value}';
 =====================================================================================
  	 query_stat_date : 0
 ==============================Login Successful!!!===================================
-Member admin, welcome. 
+Member test, welcome. 
 ##############################################
-Login time:  2024-02-18 14:31:09
-SELECT DISTINCT                            IFNULL(                             CAST(                                   (                                       SELECT CASE                                         WHEN COUNT(*) > 0 THEN 1                                            ELSE 0                                      END                                     FROM (                                          SELECT A1.USER_INFONUM                                          FROM ADMIN AS A1                                            INNER JOIN ADMIN_SECURITY AS S ON ADMIN.USERNAME = S.USERNAME                                           WHERE ADMIN.USER_INFONUM = S.USER_SECURITY_INFO                                          AND   ADMIN.USERNAME = S.USERNAME                                        ) A                                 ) AS CHAR                               ), 0                            ) AS LOGIN                      FROM ADMIN                  WHERE                     USERNAME = 'admin'                     AND PASSWORD = '${hash password value}'; 
+Login time:  2024-02-18 21:55:34
+SELECT DISTINCT                            IFNULL(                             CAST(                                   (                                       SELECT CASE                                         WHEN COUNT(*) > 0 THEN 1                                            ELSE 0                                      END                                     FROM (                                          SELECT A1.USER_INFONUM                                          FROM ADMIN AS A1                                            INNER JOIN ADMIN_SECURITY AS S ON ADMIN.USERNAME = S.USERNAME                                           WHERE ADMIN.USER_INFONUM = S.USER_SECURITY_INFO                                          AND   ADMIN.USERNAME = S.USERNAME                                        ) A                                 ) AS CHAR                               ), 0                            ) AS LOGIN                      FROM ADMIN                  WHERE                     USERNAME = 'test'                     AND PASSWORD = '937e8d5fbb48bd4949536cd65b8d35c426b80d2f830c5c308e2cdec422ae2244';
 
 ```  
+
 
 Replace your-username and your-repo-name with your GitHub username and repository name respectively. Make sure to update the MySQL connection details in connect.json before running the program.
 
