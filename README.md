@@ -111,7 +111,7 @@ WARNING :
 // sha256(password, hashedPassword); // Hash the user's password using SHA-256
 ```  
   
-  
+
 ```
 ----------------------------------------------------------------------------------------------------------------------------------
 -- The warnings about 'SHA256_Init', 'SHA256_Update', and 'SHA256_Final' being deprecated since OpenSSL 3.0 can be safely ignored.
@@ -188,42 +188,67 @@ To integrate this C program with a web interface for user authentication, use th
 ```
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // 사용자 입력 처리
-    $username = $_POST['username']; // escapeshellarg 호출 전 원본 데이터 유지
-    $password = $_POST['password']; // escapeshellarg 호출 전 원본 데이터 유지
-
-    // 입력된 사용자 이름과 비밀번호 출력 (HTML escape 처리)
-    echo "<h3>입력된 정보:</h3>";
-    echo "아이디: " . htmlspecialchars($username) . "<br>";
-    echo "비밀번호: " . htmlspecialchars($password) . "<br>";
-
-    // escapeshellarg 함수를 사용하여 쉘 명령어 인자를 안전하게 처리
+    $username = $_POST['username'];
+    // Use the hashed password instead of the original password
+    $hashedPassword = $_POST['hashedPassword'];
+    
+    // Display the entered username and hashed password (with HTML escape)
+    echo "<h3>Entered Information:</h3>";
+    echo "Username: " . htmlspecialchars($username) . "<br>";
+    echo "Hashed Password: " . htmlspecialchars($hashedPassword) . "<br>";
+    
     $safe_username = escapeshellarg($username);
-    $safe_password = escapeshellarg($password);
-
-    // C 프로그램 실행 및 결과 출력
-    $command = "/var/www/cloud/loginParserC/loginSecurityLib {$safe_username} {$safe_password} 2>&1";
-
+    
+    // Use the hashed password when calling the C program
+    $command = "/var/www/cloud/loginParserC/loginSecurityLib {$safe_username} {$hashedPassword} 2>&1";
     $output = shell_exec($command);
     
-    // 로그인 성공 여부 확인 (예시)
-    if (strpos($output, "로그인 성공!!!") !== false) {
-        // 로그인 성공 시 localhost/ 로 리다이렉트
+    /**
+     * 
+     * Notice )
+     * 
+     * The mechanism for checking login success between a C program and a PHP script involves comparing the output string of the C program with a condition in PHP. 
+     * When the login is successful in the C program, it prints a string like "==============================Login Successful!!!===================================\n". 
+     * Then, the PHP script executes this C program using the shell_exec() function and stores its output in the $output variable.
+     * The PHP script examines the contents of this $output variable to check if it contains a specific string. In this case, the presence of the "Login Successful!!!" 
+     * string is used to determine the success of the login. If this string exists within $output, it is considered a successful login, 
+     * and the user is redirected to the homepage of localhost. Conversely, if this string does not exist, a login failure message is displayed to the user.
+     * Through this process, the integration between the login verification logic of the C program and the PHP web interface is implemented, 
+     * allowing users to be redirected to the homepage of localhost upon successful login.
+     */
+    // Check for login success
+    if (strpos($output, "Login Successful!!!") !== false) { // "Login Successful!!!"
         header("Location: http://localhost/");
         exit();
     } else {
-        // 로그인 실패 시 메시지 출력
-        echo "<pre>로그인에 실패하셨습니다!</pre>";
+        echo "<pre>Login Failed!</pre>";
         echo "<pre>$output</pre>";
     }
 }
 ?>
 
-<form method="post">
-    아이디: <input type="text" name="username"><br>
-    비밀번호: <input type="password" name="password"><br>
-    <input type="submit" value="로그인">
+<form method="post" onsubmit="return hashPassword();">
+    Username: <input type="text" name="username"><br>
+    Password: <input type="password" id="password"><br>
+    <!-- Add a hidden field to store the hashed password -->
+    <input type="hidden" name="hashedPassword" id="hashedPassword">
+    <input type="submit" value="Login">
 </form>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+<script>
+function hashPassword() {
+    var password = document.getElementById('password').value;
+    var hashedPassword = CryptoJS.SHA256(password).toString();
+    
+    // Set the hashed password in the hidden field
+    document.getElementById('hashedPassword').value = hashedPassword;
+    
+    // Clear the original password field
+    document.getElementById('password').value = '';
+    return true; // Continue with form submission
+}
+</script>
 ```  
 
 ## make && make clean  
@@ -241,9 +266,9 @@ connect.json  connector.h  createDb.txt  golangbuild.txt  login.c  Makefile  REA
 ```  
 
 ## Console Test  
+```
     // Uncomment the line below if you want to test in the console
     // console에서 테스트를 해보고 싶다면 아래 줄의 주석을 해제한다.
-```
     // sha256(password, hashedPassword);
 ```  
   
@@ -260,14 +285,3 @@ Build Example
 [Include build and execution examples as previously provided]
 
 Replace your_db_user, your_db_password, and your_db_name with your actual MySQL database details before running the program. Customize the README to include any additional information or instructions specific to your project.
-
-
-## Pictures  
-![Kernel Build](https://github.com/Azabell1993/ClangLoginParserPHP/blob/main/kernel_build.png)  
-  
-![Web Login](https://github.com/Azabell1993/ClangLoginParserPHP/blob/main/web_login.png)  
-  
-![Success](https://github.com/Azabell1993/ClangLoginParserPHP/blob/main/success.png)  
-  
-![Failed](https://github.com/Azabell1993/ClangLoginParserPHP/blob/main/login failed.png)  
-  
