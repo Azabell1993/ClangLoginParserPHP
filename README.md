@@ -16,6 +16,14 @@ MySQL development libraries for linking the MySQL client.
 ## Setup
 Clone the repository to your local machine
 
+## Install Package
+$ sudo apt-get update
+$ sudo apt-get install libmysqlclient-dev
+$ sudo apt-get install mysql-server-8.0
+$ sudo apt-get install mysql-client-8.0
+$ sudo apt-get install mysql-client
+  
+  
 ## bash
 -------------
 $ sudo git clone https://github.com/Azabell1993/ClangLoginParserPHP.git  

@@ -23,17 +23,6 @@ mysql> FLUSH PRIVILEGES;
 
 mysql> use admin;
 Database changed
-mysql> INSERT INTO ADMIN ( USER_INFONUM, NAME, USERNAME, PASSWORD, CREATE_DATE) VALUES ( 'Kads1d$', 'admin', 'admin', 'admin1234', NOW());
-ERROR 1146 (42S02): Table 'admin.ADMIN' doesn't exist
-mysql> 
-mysql> INSERT INTO ADMIN_SECURITY (USER_SECURITY_INFO, USERNAME) VALUES ('Kads1d$', 'admin');
-ERROR 1146 (42S02): Table 'admin.ADMIN_SECURITY' doesn't exist
-mysql> INSERT INTO ADMIN ( USER_INFONUM, NAME, USERNAME, PASSWORD, CREATE_DATE) VALUES ( 'Kads1d$', 'admintest', 'admintest', 'admin1234', NOW());
-ERROR 1146 (42S02): Table 'admin.ADMIN' doesn't exist
-mysql> 
-mysql> INSERT INTO ADMIN_SECURITY (USER_SECURITY_INFO, USERNAME) VALUES ('Kads1d$', 'admintest');
-ERROR 1146 (42S02): Table 'admin.ADMIN_SECURITY' doesn't exist
-mysql> 
 mysql> CREATE TABLE ADMIN_SECURITY (
     -> NO INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     -> USER_SECURITY_INFO VARCHAR(20) NOT NULL,
