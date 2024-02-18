@@ -1,6 +1,6 @@
 {
   "db_host": "localhost",
-  "db_user": "admin",
-  "db_name": "admin",
-  "db_pass": "admin"
+  "db_user": "test",
+  "db_pass": "test1234",
+  "db_name": "test"
 }

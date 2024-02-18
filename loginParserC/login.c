@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
     // ********************************************************************************
     // Uncomment the line below if you want to test in the console
     // console에서 테스트를 해보고 싶다면 아래 줄의 주석을 해제한다.
-    sha256(password, hashedPassword); // 사용자의 패스워드를 SHA-256으로 해싱
+   sha256(password, hashedPassword); // 사용자의 패스워드를 SHA-256으로 해싱
     // ********************************************************************************
 
     // Use username and password in the following logic
