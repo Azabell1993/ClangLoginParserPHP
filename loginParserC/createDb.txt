@@ -65,7 +65,7 @@ Query OK, 0 rows affected (0.01 sec)
 // *******************************************************************************************************************************************************
 
 mysql > UPDATE ADMIN 
-        SET PASSWORD = '${hash password value}';  <-- Directly insert.
+        SET PASSWORD = '${hash password value}'  // <-- Directly insert.
         WHERE USERNAME = 'admin';
 
 mysql> quit;
