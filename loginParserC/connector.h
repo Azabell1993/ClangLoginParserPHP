@@ -136,8 +136,9 @@ char *test(char *c) {
 
 char *get_tokens(int token_select_num) {
     int size;
-
-    char *doc = read_json_file("/var/www/cloud/loginParserC/connect.json", &size);
+    
+    // char *doc = read_json_file("/var/www/cloud/loginParserC/connect.json", &size);
+    char *doc = read_json_file("connect.json", &size);
     if(doc==NULL)
         return 0;
 
