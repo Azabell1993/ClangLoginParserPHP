@@ -104,7 +104,7 @@ Query OK, 0 rows affected (0.01 sec)
 ## SQL data Backup  
 ```
 ubuntu@mtdata:/var/www/cloud/ClangLoginParserPHP$ sudo chmod 777 data.sql
-ubuntu@mtdata:/var/www/cloud/ClangLoginParserPHP$ sudo mysql -u test -p test > data.sql
+ubuntu@mtdata:/var/www/cloud/ClangLoginParserPHP$ sudo mysql -u test -p test < data.sql
 Enter password:
 ```  
     
